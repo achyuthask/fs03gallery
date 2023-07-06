@@ -1,25 +1,38 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Container,  Col } from 'react-bootstrap';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [photos, setPhotos] = useState([]);
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      try {
+        const response = await axios.get(
+          'https://api.unsplash.com/photos/?client_id=IdWIxoIkmBv7yVTLK-CrDauCL95mCLwoq7sT6HMBu_c'
+        );
+        setPhotos(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPhotos();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between"}}>
+      <h1>Gallery App</h1>
+      
+        {photos.map((photo) => (
+          <Col sm={4} key={photo.id}>
+            <img src={photo.urls.small} alt={photo.alt_description} />
+          </Col>
+        ))}
+      
+    </Container>
   );
-}
+};
 
 export default App;
